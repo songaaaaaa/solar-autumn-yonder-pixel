@@ -10,7 +10,7 @@ export type TicketStatus = "open" | "queued" | "running" | "done" | "error";
 
 export type Provider = "auto" | "ollama" | "grok";
 
-export type AgentBackend = "ollama" | "anythingllm" | "auto";
+export type AgentBackend = "ollama" | "anythingllm" | "grok" | "auto";
 
 export type ChatRole = "user" | "assistant";
 
@@ -30,7 +30,6 @@ export interface TableMessage {
   speaker: SpeakerId;
   content: string;
   createdAt: number;
-  /** table = open floor. wire = agent-to-agent on the crew line. */
   kind: "table" | "wire";
 }
 
@@ -44,7 +43,6 @@ export interface TicketNote {
 export interface JobTicket {
   id: string;
   kind: TicketKind;
-  /** null = empty-chair inbox, not yet assigned */
   agentId: AgentId | null;
   parentId?: string;
   type?: JobType;
@@ -56,7 +54,6 @@ export interface JobTicket {
   notes: TicketNote[];
   createdAt: number;
   finishedAt?: number;
-  /** Set when the user clears it off the board. */
   clearedAt?: number;
 }
 
@@ -69,6 +66,8 @@ export interface Settings {
   anythingllmUrl: string;
   anythingllmKey: string;
   anythingllmSlug: string;
+  grokApiKey: string;
+  grokModel: string;
   agentBackends: Record<AgentId, AgentBackend>;
 }
 
