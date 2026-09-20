@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "NIGHTWIRE",
+      "hasCanvas": false,
+      "bodyTextLen": 247,
+      "bodyTextHash": "22ce3b6e2c74135225dea59cca37b585e43793d466b9efa62ff52302a118bf72",
+      "bodyTextPrefix": "Standby The board is clear ARCHIVE Nyx Quinn SPARK Jinx Calder W",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "NIGHTWIRE",
+      "hasCanvas": false,
+      "bodyTextLen": 247,
+      "bodyTextHash": "22ce3b6e2c74135225dea59cca37b585e43793d466b9efa62ff52302a118bf72",
+      "bodyTextPrefix": "Standby The board is clear ARCHIVE Nyx Quinn SPARK Jinx Calder W",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json"
+}

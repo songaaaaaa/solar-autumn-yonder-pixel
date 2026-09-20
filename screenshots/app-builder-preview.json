@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "NIGHTWIRE",
+      "hasCanvas": false,
+      "bodyTextLen": 264,
+      "bodyTextHash": "955072f2ba735ad4b8de3d1f2dcdd4250ba76c4c232ca1c87b04f228d96847aa",
+      "bodyTextPrefix": "ARCHIVE SPARK WIRE GHOST Standby The table is clear TABLE T open",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "NIGHTWIRE",
+      "hasCanvas": false,
+      "bodyTextLen": 240,
+      "bodyTextHash": "de62ff70882c8240e116edfd3dcc86ee76ce0c9ce814fd3341b9e3fb043cb2fb",
+      "bodyTextPrefix": "ARCHIVE SPARK Standby The table is clear WIRE GHOST Round table ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
