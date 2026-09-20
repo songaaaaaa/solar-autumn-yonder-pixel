@@ -114,7 +114,7 @@ export function SettingsPanel() {
           </label>
 
           <label className="block space-y-1">
-            <span className="text-xs text-muted">Shared model</span>
+            <span className="text-xs text-muted">Shared Ollama model</span>
             <ModelField
               value={settings.sharedModel}
               models={models}
@@ -123,7 +123,7 @@ export function SettingsPanel() {
           </label>
 
           <div className="space-y-3 rounded-md border border-border p-3">
-            <p className="text-sm text-fg">AnythingLLM (Nyx + Echo)</p>
+            <p className="text-sm text-fg">AnythingLLM</p>
             <label className="block space-y-1">
               <span className="text-xs text-muted">Base URL</span>
               <input
@@ -139,7 +139,7 @@ export function SettingsPanel() {
                 type="password"
                 value={settings.anythingllmKey ?? ""}
                 onChange={(e) => patchSettings({ anythingllmKey: e.target.value })}
-                placeholder="Paste key here — not in chat"
+                placeholder="Paste AnythingLLM key here"
                 className="h-11 w-full rounded-md border border-border bg-bg px-3 text-sm text-fg outline-none"
               />
             </label>
@@ -152,6 +152,30 @@ export function SettingsPanel() {
                 className="h-11 w-full rounded-md border border-border bg-bg px-3 text-sm text-fg outline-none"
               />
             </label>
+          </div>
+
+          <div className="space-y-3 rounded-md border border-border p-3">
+            <p className="text-sm text-fg">Grok (Relay)</p>
+            <label className="block space-y-1">
+              <span className="text-xs text-muted">xAI API key</span>
+              <input
+                type="password"
+                value={settings.grokApiKey ?? ""}
+                onChange={(e) => patchSettings({ grokApiKey: e.target.value })}
+                placeholder="xai-... paste here, not in chat"
+                className="h-11 w-full rounded-md border border-border bg-bg px-3 text-sm text-fg outline-none"
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-xs text-muted">Model</span>
+              <input
+                value={settings.grokModel ?? "grok-4-fast"}
+                onChange={(e) => patchSettings({ grokModel: e.target.value })}
+                placeholder="grok-4-fast"
+                className="h-11 w-full rounded-md border border-border bg-bg px-3 text-sm text-fg outline-none"
+              />
+            </label>
+            <p className="text-xs text-faint">Get a key at console.x.ai. Stored only in this browser.</p>
           </div>
 
           <div className="space-y-2">
@@ -174,44 +198,11 @@ export function SettingsPanel() {
                   <option value="auto">Auto</option>
                   <option value="ollama">Ollama</option>
                   <option value="anythingllm">AnythingLLM</option>
+                  <option value="grok">Grok</option>
                 </select>
               </label>
             ))}
           </div>
-
-          <label className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-3">
-            <span>
-              <span className="block text-sm text-fg">Per-operator models</span>
-              <span className="block text-xs text-muted">Ollama model names only.</span>
-            </span>
-            <input
-              type="checkbox"
-              checked={settings.perAgentModels}
-              onChange={(e) => patchSettings({ perAgentModels: e.target.checked })}
-              className="size-5 accent-accent"
-            />
-          </label>
-
-          {settings.perAgentModels ? (
-            <div className="space-y-3">
-              {AGENT_ORDER.map((id) => (
-                <label key={id} className="block space-y-1">
-                  <span className="text-xs text-muted">
-                    {AGENTS[id].handle}
-                  </span>
-                  <ModelField
-                    value={settings.agentModels[id]}
-                    models={models}
-                    onChange={(name) =>
-                      patchSettings({
-                        agentModels: { ...settings.agentModels, [id]: name } as Record<AgentId, string>,
-                      })
-                    }
-                  />
-                </label>
-              ))}
-            </div>
-          ) : null}
 
           {probeMsg ? <p className="text-sm text-muted">{probeMsg}</p> : null}
         </div>
