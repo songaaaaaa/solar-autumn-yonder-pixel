@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { AGENTS, AGENT_ORDER } from "@/lib/agents";
 import { probeOllama, refreshUplink } from "@/lib/llm";
-import type { AgentId, Provider } from "@/lib/types";
+import type { AgentBackend, AgentId, Provider } from "@/lib/types";
 import { useDen } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -120,15 +120,69 @@ export function SettingsPanel() {
               models={models}
               onChange={(sharedModel) => patchSettings({ sharedModel })}
             />
-            <p className="text-xs text-faint">
-              On 16GB VRAM, one model with four personas is the sweet spot. Split models only if they are small.
-            </p>
           </label>
+
+          <div className="space-y-3 rounded-md border border-border p-3">
+            <p className="text-sm text-fg">AnythingLLM (Nyx + Echo)</p>
+            <label className="block space-y-1">
+              <span className="text-xs text-muted">Base URL</span>
+              <input
+                value={settings.anythingllmUrl ?? ""}
+                onChange={(e) => patchSettings({ anythingllmUrl: e.target.value })}
+                placeholder="http://127.0.0.1:3001"
+                className="h-11 w-full rounded-md border border-border bg-bg px-3 text-sm text-fg outline-none"
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-xs text-muted">API key</span>
+              <input
+                type="password"
+                value={settings.anythingllmKey ?? ""}
+                onChange={(e) => patchSettings({ anythingllmKey: e.target.value })}
+                placeholder="Paste key here — not in chat"
+                className="h-11 w-full rounded-md border border-border bg-bg px-3 text-sm text-fg outline-none"
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-xs text-muted">Workspace slug</span>
+              <input
+                value={settings.anythingllmSlug ?? ""}
+                onChange={(e) => patchSettings({ anythingllmSlug: e.target.value })}
+                placeholder="my-workspace"
+                className="h-11 w-full rounded-md border border-border bg-bg px-3 text-sm text-fg outline-none"
+              />
+            </label>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-xs text-muted">Who talks to which backend</p>
+            {AGENT_ORDER.map((id) => (
+              <label key={id} className="flex items-center justify-between gap-3">
+                <span className="text-sm text-fg">{AGENTS[id].handle}</span>
+                <select
+                  value={settings.agentBackends?.[id] ?? "auto"}
+                  onChange={(e) =>
+                    patchSettings({
+                      agentBackends: {
+                        ...settings.agentBackends,
+                        [id]: e.target.value as AgentBackend,
+                      },
+                    })
+                  }
+                  className="h-10 rounded-md border border-border bg-bg px-2 text-sm text-fg"
+                >
+                  <option value="auto">Auto</option>
+                  <option value="ollama">Ollama</option>
+                  <option value="anythingllm">AnythingLLM</option>
+                </select>
+              </label>
+            ))}
+          </div>
 
           <label className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-3">
             <span>
               <span className="block text-sm text-fg">Per-operator models</span>
-              <span className="block text-xs text-muted">Optional overrides. Still one call at a time.</span>
+              <span className="block text-xs text-muted">Ollama model names only.</span>
             </span>
             <input
               type="checkbox"
@@ -160,11 +214,6 @@ export function SettingsPanel() {
           ) : null}
 
           {probeMsg ? <p className="text-sm text-muted">{probeMsg}</p> : null}
-
-          <p className="text-xs text-faint">
-            Local calls leave this browser for Ollama. If the page is served over HTTPS, some browsers block HTTP
-            local servers — allow CORS on Ollama or keep Relay on.
-          </p>
         </div>
 
         <div className="flex justify-end gap-2 border-t border-border px-5 py-4">
@@ -192,7 +241,7 @@ function ModelField({
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={models[0] ?? "llama3.1"}
+        placeholder={models[0] ?? "qwen2.5:14b"}
         className="h-11 min-w-0 flex-1 rounded-md border border-border bg-bg px-3 text-sm text-fg outline-none"
       />
       {models.length > 0 ? (
