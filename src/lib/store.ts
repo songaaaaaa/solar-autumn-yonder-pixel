@@ -9,9 +9,18 @@ const STORAGE_KEY = "nightwire-den-v1";
 export const DEFAULT_SETTINGS: Settings = {
   provider: "auto",
   ollamaUrl: "http://127.0.0.1:11434",
-  sharedModel: "",
+  sharedModel: "qwen2.5:14b",
   perAgentModels: false,
   agentModels: { rook: "", nyx: "", jinx: "", echo: "" },
+  anythingllmUrl: "http://127.0.0.1:3001",
+  anythingllmKey: "",
+  anythingllmSlug: "my-workspace",
+  agentBackends: {
+    rook: "ollama",
+    jinx: "ollama",
+    nyx: "anythingllm",
+    echo: "anythingllm",
+  },
 };
 
 function emptyThreads(): Record<AgentId, ChatMessage[]> {
@@ -49,7 +58,7 @@ export interface DenState {
   table: TableMessage[];
   jobs: JobTicket[];
   settings: Settings;
-  uplink: "unknown" | "ollama" | "grok" | "offline";
+  uplink: "unknown" | "ollama" | "grok" | "anythingllm" | "offline";
   uplinkDetail: string;
   busy: boolean;
   lastError: string | null;
@@ -194,7 +203,18 @@ export const useDen = create<DenState>((set) => ({
     }));
   },
   patchSettings: (patch) =>
-    set((s) => ({ settings: { ...s.settings, ...patch } })),
+    set((s) => ({
+      settings: {
+        ...s.settings,
+        ...patch,
+        agentBackends: patch.agentBackends
+          ? { ...s.settings.agentBackends, ...patch.agentBackends }
+          : s.settings.agentBackends,
+        agentModels: patch.agentModels
+          ? { ...s.settings.agentModels, ...patch.agentModels }
+          : s.settings.agentModels,
+      },
+    })),
   setUplink: (uplink, uplinkDetail) => set({ uplink, uplinkDetail }),
   setBusy: (busy) => set({ busy }),
   setLastError: (lastError) => set({ lastError }),
@@ -224,7 +244,18 @@ export function hydrateDen() {
         threads: parsed.threads ?? emptyThreads(),
         table: parsed.table ?? [],
         jobs,
-        settings: { ...DEFAULT_SETTINGS, ...parsed.settings },
+        settings: {
+          ...DEFAULT_SETTINGS,
+          ...parsed.settings,
+          agentBackends: {
+            ...DEFAULT_SETTINGS.agentBackends,
+            ...(parsed.settings?.agentBackends ?? {}),
+          },
+          agentModels: {
+            ...DEFAULT_SETTINGS.agentModels,
+            ...(parsed.settings?.agentModels ?? {}),
+          },
+        },
         hydrated: true,
       });
     } else {
