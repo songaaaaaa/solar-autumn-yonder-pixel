@@ -13,14 +13,20 @@ const Payload = z.object({
     .max(24),
   maxTokens: z.number().int().min(64).max(1600).optional(),
   temperature: z.number().min(0).max(1.4).optional(),
+  apiKey: z.string().max(200).optional(),
+  model: z.string().max(80).optional(),
 });
 
 export const completeChat = createServerFn({ method: "POST" })
   .validator(Payload)
   .handler(async ({ data }) => {
-    const apiKey = process.env["XAI_API_KEY"];
+    const apiKey = data.apiKey?.trim() || process.env["XAI_API_KEY"];
+    const model = data.model?.trim() || "grok-4-fast";
     if (!apiKey) {
-      return { ok: false as const, error: "Relay is not available in this environment." };
+      return {
+        ok: false as const,
+        error: "Add your xAI API key in Settings → Grok, or set XAI_API_KEY.",
+      };
     }
 
     const res = await fetch("https://api.x.ai/v1/chat/completions", {
@@ -30,7 +36,7 @@ export const completeChat = createServerFn({ method: "POST" })
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "grok-4.5",
+        model,
         messages: data.messages,
         temperature: data.temperature ?? 0.7,
         max_tokens: data.maxTokens ?? 900,
@@ -52,5 +58,5 @@ export const completeChat = createServerFn({ method: "POST" })
     if (!text) {
       return { ok: false as const, error: "Relay came back empty." };
     }
-    return { ok: true as const, text, source: "grok" as const, model: "grok-4.5" };
+    return { ok: true as const, text, source: "grok" as const, model };
   });
