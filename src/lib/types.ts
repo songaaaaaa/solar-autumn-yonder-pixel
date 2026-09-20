@@ -10,6 +10,8 @@ export type TicketStatus = "open" | "queued" | "running" | "done" | "error";
 
 export type Provider = "auto" | "ollama" | "grok";
 
+export type AgentBackend = "ollama" | "anythingllm" | "auto";
+
 export type ChatRole = "user" | "assistant";
 
 export type SpeakerId = "user" | AgentId;
@@ -64,12 +66,16 @@ export interface Settings {
   sharedModel: string;
   perAgentModels: boolean;
   agentModels: Record<AgentId, string>;
+  anythingllmUrl: string;
+  anythingllmKey: string;
+  anythingllmSlug: string;
+  agentBackends: Record<AgentId, AgentBackend>;
 }
 
 export interface LlmOk {
   ok: true;
   text: string;
-  source: "ollama" | "grok";
+  source: "ollama" | "grok" | "anythingllm";
   model: string;
 }
 
