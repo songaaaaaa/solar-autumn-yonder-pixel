@@ -15,6 +15,8 @@ export const DEFAULT_SETTINGS: Settings = {
   anythingllmUrl: "http://127.0.0.1:3001",
   anythingllmKey: "",
   anythingllmSlug: "my-workspace",
+  grokApiKey: "",
+  grokModel: "grok-4-fast",
   agentBackends: {
     rook: "ollama",
     jinx: "ollama",
